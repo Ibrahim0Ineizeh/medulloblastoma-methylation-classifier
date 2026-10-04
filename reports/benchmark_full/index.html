@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A reproducible research benchmark for Group 3/4 medulloblastoma subtype classification from prepared DNA methylation features.">
+<title>Medulloblastoma methylation classifier · Results report</title>
+<style>
+:root { --navy:#142b3e; --teal:#087f8c; --ink:#253f50; --muted:#627783; --paper:#f5f6f2; --line:#dce6e5; --gold:#c88a2d; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size:16px; line-height:1.6; }
+a { color:var(--teal); text-underline-offset:3px; }
+a:hover { color:var(--navy); }
+a:focus-visible, summary:focus-visible { outline:3px solid var(--gold); outline-offset:5px; }
+.skip { position:absolute; top:-80px; left:16px; padding:12px 20px; background:white; z-index:5; }
+.skip:focus { top:12px; }
+.wrap { max-width:1220px; margin:0 auto; padding:0 36px; }
+.topbar { border-bottom:1px solid var(--line); background:#fff; }
+.topbar .wrap { display:flex; justify-content:space-between; align-items:center; gap:24px; min-height:80px; }
+.brand { display:flex; align-items:center; gap:13px; color:var(--navy); font-weight:750; letter-spacing:-.02em; font-size:18px; }
+.brand-mark { width:34px; height:34px; border-radius:9px; background:var(--navy); display:grid; grid-template-columns:repeat(3,4px); gap:4px; justify-content:center; align-content:center; }
+.brand-mark i { width:4px; height:14px; background:#7fc7c8; border-radius:2px; }
+.brand-mark i:nth-child(2) { height:20px; background:white; transform:translateY(-3px); }
+nav { display:flex; gap:24px; font-size:13px; font-weight:650; }
+nav a { text-decoration:none; color:var(--muted); }
+.hero { padding:70px 0 40px; }
+.eyebrow { font-size:12px; text-transform:uppercase; letter-spacing:.16em; font-weight:750; color:var(--teal); margin:0 0 18px; }
+.hero-grid { display:grid; grid-template-columns:1fr 270px; gap:64px; align-items:start; }
+h1 { margin:0 0 22px; font-family:Georgia,"Times New Roman",serif; font-weight:400; font-size:clamp(40px,5.2vw,67px); letter-spacing:-.045em; line-height:1.04; color:var(--navy); }
+.lede { font-size:18px; max-width:680px; margin:0; color:var(--muted); line-height:1.7; }
+.study-card { background:var(--navy); color:white; border-radius:16px; padding:25px 26px; margin-top:8px; }
+.study-card .eyebrow { color:#93cfd1; margin-bottom:17px; }
+.study-card dl { margin:0; }
+.study-card dl > div { display:flex; justify-content:space-between; gap:15px; border-top:1px solid #385064; padding:10px 0; font-size:13px; }
+.study-card dt { color:#bed0dc; }
+.study-card dd { margin:0; font-weight:650; text-align:right; }
+.badge { display:inline-flex; border:1px solid #9bbcc0; color:var(--teal); background:#edf6f5; padding:5px 12px; border-radius:100px; font-weight:700; font-size:12px; }
+.notice { display:flex; align-items:flex-start; gap:16px; padding:22px 26px; border:1px solid #e2cdab; border-left:4px solid var(--gold); border-radius:10px; background:#fff9ed; font-size:14px; }
+.notice p { margin:0; }
+.notice strong { color:var(--navy); }
+.notice.cohort { background:#edf6f5; border-color:#b8d6d7; border-left-color:var(--teal); }
+.cards { display:grid; grid-template-columns:repeat(4,1fr); gap:17px; margin:26px 0 46px; }
+.stat { background:white; border:1px solid var(--line); border-radius:12px; padding:23px; }
+.stat-label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.06em; font-weight:650; }
+.stat-value { font-size:34px; line-height:1.18; letter-spacing:-.045em; color:var(--navy); margin:13px 0 9px; font-weight:750; }
+.stat-value.model { font-size:25px; letter-spacing:-.03em; }
+.stat-detail { font-size:12px; line-height:1.5; color:var(--muted); margin:0; }
+section { margin:0 0 28px; }
+.panel { background:white; border:1px solid var(--line); border-radius:16px; padding:32px; }
+.section-head { display:flex; justify-content:space-between; align-items:start; gap:24px; margin-bottom:25px; }
+.section-number { font-size:12px; color:var(--teal); font-weight:750; letter-spacing:.1em; margin:0 0 7px; }
+h2 { font-size:25px; letter-spacing:-.035em; color:var(--navy); margin:0 0 8px; line-height:1.3; }
+h3 { font-size:17px; letter-spacing:-.02em; color:var(--navy); margin:0 0 9px; }
+p { margin:0 0 16px; }
+.subtext { color:var(--muted); font-size:14px; margin:0; max-width:760px; }
+.legend { white-space:nowrap; color:var(--muted); font-size:12px; padding-top:9px; }
+.dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--teal); margin-right:7px; }
+figure { margin:0; }
+figure img { display:block; width:100%; height:auto; }
+figcaption { font-size:12px; color:var(--muted); padding-top:12px; line-height:1.65; }
+.comparison-figure { max-width:1020px; margin:0 auto; }
+.table-scroll { width:100%; overflow-x:auto; margin-top:26px; }
+table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; text-align:left; }
+thead { color:var(--muted); background:#f3f7f7; }
+th,td { padding:13px 14px; border-bottom:1px solid var(--line); vertical-align:middle; }
+thead th { font-size:11px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; white-space:nowrap; }
+tbody th { font-weight:650; color:var(--navy); min-width:140px; }
+.numeric { text-align:right; white-space:nowrap; }
+.strong { font-weight:750; color:var(--navy); }
+.selected-row { background:#f1f8f7; }
+.selected-label { display:block; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--teal); margin-top:2px; }
+.footnote { color:var(--muted); font-size:12px; margin:17px 0 0; }
+.matrix-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:24px; }
+.matrix-card { border:1px solid var(--line); border-radius:12px; padding:21px 15px 16px; overflow:hidden; }
+.matrix-card h3 { margin-left:7px; font-size:15px; }
+.matrix-meta { margin:0 7px 12px; font-size:12px; color:var(--muted); }
+.matrix-card figcaption { margin:0 7px; }
+.details-group { margin-top:25px; }
+details { border-top:1px solid var(--line); padding:16px 0; }
+summary { cursor:pointer; font-weight:650; color:var(--navy); font-size:14px; }
+details .table-scroll { margin-top:16px; }
+.data-grid { display:grid; grid-template-columns:1.05fr 1fr; gap:38px; }
+.data-grid .table-scroll { margin-top:0; }
+.data-grid th,.data-grid td { padding:12px 8px; }
+.class-counts { font-size:11px; line-height:1.65; color:var(--muted); display:block; margin-top:5px; font-weight:400; }
+.pair-note { background:#f1f7f7; border-radius:10px; padding:19px 23px; margin-top:24px; font-size:14px; border-left:3px solid var(--teal); }
+.pair-note p:last-child { margin-bottom:0; }
+.method-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:24px; }
+.method-step { border-left:2px solid var(--line); padding-left:20px; }
+.method-step .step { color:var(--teal); font-size:11px; letter-spacing:.1em; font-weight:750; display:block; margin-bottom:11px; }
+.method-step p { font-size:13px; color:var(--muted); margin:0; }
+pre { background:#f3f7f7; border:1px solid var(--line); border-radius:9px; padding:20px; overflow-x:auto; font-size:12px; color:var(--navy); line-height:1.7; }
+code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+.notes { font-size:13px; color:var(--muted); padding-left:20px; }
+.notes li { margin:8px 0; }
+.warning { margin-top:20px; font-size:13px; background:#fff9ed; padding:18px 22px; border-radius:9px; }
+.warning ul { padding-left:20px; margin-bottom:0; }
+.report-footer { padding:16px 0 40px; color:var(--muted); display:flex; justify-content:space-between; gap:25px; font-size:12px; }
+.report-footer p { margin:0; max-width:690px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media(max-width:1000px) { .hero-grid { gap:30px; grid-template-columns:1fr 250px; } .cards { grid-template-columns:repeat(2,1fr); } .matrix-grid { grid-template-columns:repeat(2,1fr); } .data-grid { grid-template-columns:1fr; gap:28px; } }
+@media(max-width:680px) { .wrap { padding:0 20px; } .topbar .wrap { min-height:70px; } .brand { font-size:15px; } nav { gap:14px; font-size:11px; } nav a:last-child { display:none; } .hero { padding-top:42px; } .hero-grid { grid-template-columns:1fr; gap:25px; } h1 { font-size:45px; } .lede { font-size:16px; } .study-card { margin-top:0; } .study-card dl { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; } .cards { gap:12px; margin-bottom:28px; } .stat { padding:19px 15px; } .stat-value { font-size:30px; } .stat-value.model { font-size:22px; } .panel { padding:23px 17px; } .section-head { display:block; } .legend { margin-top:14px; } h2 { font-size:23px; } .matrix-grid { grid-template-columns:1fr; } .method-grid { grid-template-columns:1fr; gap:23px; } .notice { padding:20px; } .report-footer { flex-direction:column; gap:14px; } th,td { padding:12px 10px; } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print { body { background:white; font-size:10pt; } .wrap { max-width:none; padding:0; } .topbar,nav,.skip { display:none; } .hero { padding-top:15px; } h1 { font-size:36pt; } .panel { break-inside:avoid; } .cards { gap:10px; } a { color:var(--navy); } details { display:block; } details > * { display:block; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to results</a>
+<header class="topbar"><div class="wrap">
+<div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>MB / methylation</div>
+<nav aria-label="Report navigation"><a href="#results">Results</a><a href="#data">Data</a><a href="#method">Method</a><a href="metrics.json">Metrics JSON</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero"><div class="hero-grid"><div>
+<p class="eyebrow">Computational oncology / Research portfolio</p>
+<h1>Medulloblastoma<br>methylation classification.</h1>
+<p class="lede">A reproducible comparison of dimensionality reduction, support vector machines, and a baseline for Group 3/4 molecular subtype prediction.</p>
+</div><aside class="study-card" aria-label="Run metadata">
+<p class="eyebrow">The benchmark run</p><dl>
+<div><dt>Dataset</dt><dd>Prepared cohort</dd></div>
+<div><dt>Profile</dt><dd>Full</dd></div>
+<div><dt>Random seed</dt><dd>42</dd></div>
+<div><dt>Runtime</dt><dd>87.0 s</dd></div>
+</dl></aside></div></div>
+<div class="notice cohort" role="note"><p><strong>Research benchmark on prepared cohort inputs.</strong> These results describe classification using supplied representations and subtype labels. Upstream preparation limits how strongly the scores can support independent generalization; see the provenance and validation notes below.</p></div>
+<div class="cards" aria-label="Key results">
+<div class="stat"><div class="stat-label">CV-selected model</div><div class="stat-value model">NMF + SVM</div><p class="stat-detail">Training CV macro F1: 97.4%</p></div>
+<div class="stat"><div class="stat-label">Evaluation macro F1</div><div class="stat-value">97.2%</div><p class="stat-detail">Held-out test · equal weight per subtype</p></div>
+<div class="stat"><div class="stat-label">Evaluation accuracy</div><div class="stat-value">98.0%</div><p class="stat-detail">95% CI: 95.5%–99.2%</p></div>
+<div class="stat"><div class="stat-label">Input features</div><div class="stat-value">22,892</div><p class="stat-detail">1,016 training samples · Prepared cohort benchmark</p></div>
+</div>
+<section id="results" class="panel" aria-labelledby="results-title">
+<div class="section-head"><div><p class="section-number">01 / Model comparison</p><h2 id="results-title">Performance across evaluation splits</h2>
+<p class="subtext">Model selection uses training cross-validation. Held-out and validation scores assess the selected model after tuning and are reported alongside the alternatives.</p></div>
+<div class="legend"><span class="dot" aria-hidden="true"></span>Selected by training CV</div></div>
+<figure class="comparison-figure"><img src="figures/model-comparison.png" alt="Macro F1 scores for each model on each evaluation split. Exact values appear in the table below." width="1200" loading="eager"><figcaption>Macro F1 is the unweighted mean of subtype F1 scores. The teal bars identify the model selected using training cross-validation.</figcaption></figure>
+<div class="table-scroll"><table><caption class="sr-only">Aggregate model performance on each split</caption>
+<thead><tr><th scope="col">Model</th><th scope="col">Evaluation split</th><th scope="col" class="numeric">Samples</th><th scope="col" class="numeric">Accuracy</th><th scope="col" class="numeric">Balanced acc.</th><th scope="col" class="numeric">Macro F1</th><th scope="col" class="numeric">Accuracy 95% CI</th></tr></thead>
+<tbody><tr class="selected-row"><th scope="row">NMF + SVM<span class="selected-label">CV selected</span></th><td>Held-out test set</td><td class="numeric">255</td><td class="numeric">98.0%</td><td class="numeric">97.0%</td><td class="numeric strong">97.2%</td><td class="numeric">95.5%–99.2%</td></tr><tr class="selected-row"><th scope="row">NMF + SVM<span class="selected-label">CV selected</span></th><td>HM450-compatible validation</td><td class="numeric">99</td><td class="numeric">93.9%</td><td class="numeric">95.4%</td><td class="numeric strong">92.2%</td><td class="numeric">87.4%–97.2%</td></tr><tr class="selected-row"><th scope="row">NMF + SVM<span class="selected-label">CV selected</span></th><td>EPIC validation</td><td class="numeric">97</td><td class="numeric">93.8%</td><td class="numeric">95.2%</td><td class="numeric strong">91.9%</td><td class="numeric">87.2%–97.1%</td></tr><tr class=""><th scope="row">Linear SVM</th><td>Held-out test set</td><td class="numeric">255</td><td class="numeric">97.6%</td><td class="numeric">95.3%</td><td class="numeric strong">95.9%</td><td class="numeric">95.0%–98.9%</td></tr><tr class=""><th scope="row">Linear SVM</th><td>HM450-compatible validation</td><td class="numeric">99</td><td class="numeric">93.9%</td><td class="numeric">92.6%</td><td class="numeric strong">91.6%</td><td class="numeric">87.4%–97.2%</td></tr><tr class=""><th scope="row">Linear SVM</th><td>EPIC validation</td><td class="numeric">97</td><td class="numeric">92.8%</td><td class="numeric">92.6%</td><td class="numeric strong">90.5%</td><td class="numeric">85.8%–96.5%</td></tr><tr class=""><th scope="row">Dummy baseline</th><td>Held-out test set</td><td class="numeric">255</td><td class="numeric">25.5%</td><td class="numeric">12.5%</td><td class="numeric strong">5.1%</td><td class="numeric">20.5%–31.2%</td></tr><tr class=""><th scope="row">Dummy baseline</th><td>HM450-compatible validation</td><td class="numeric">99</td><td class="numeric">25.3%</td><td class="numeric">12.5%</td><td class="numeric strong">5.0%</td><td class="numeric">17.7%–34.6%</td></tr><tr class=""><th scope="row">Dummy baseline</th><td>EPIC validation</td><td class="numeric">97</td><td class="numeric">25.8%</td><td class="numeric">12.5%</td><td class="numeric strong">5.1%</td><td class="numeric">18.1%–35.3%</td></tr></tbody></table></div>
+<p class="footnote">Accuracy measures total correct predictions. Balanced accuracy averages subtype recall; macro F1 balances precision and recall with equal subtype weighting. Confidence intervals describe sampling uncertainty in accuracy, not the effect of upstream preprocessing or dataset shift.</p>
+</section>
+<section class="panel" aria-labelledby="confusion-title">
+<div class="section-head"><div><p class="section-number">02 / Selected model</p><h2 id="confusion-title">Where the classifier succeeds and struggles</h2>
+<p class="subtext">Confusion matrices for NMF + SVM. Darker diagonal cells indicate correct classification within a subtype; off-diagonal counts show errors.</p></div></div>
+<div class="matrix-grid"><figure class="matrix-card"><h3>Held-out test set</h3><p class="matrix-meta">n = 255 · Macro F1 97.2%</p><img src="figures/confusion-test-0.png" alt="Confusion matrix for NMF + SVM on Held-out test set. Rows are true subtypes and columns are predicted subtypes." loading="lazy"><figcaption>Each cell shows the sample count and, when nonzero, the percentage of its true-subtype row.</figcaption></figure><figure class="matrix-card"><h3>HM450-compatible validation</h3><p class="matrix-meta">n = 99 · Macro F1 92.2%</p><img src="figures/confusion-hm450_validation-1.png" alt="Confusion matrix for NMF + SVM on HM450-compatible validation. Rows are true subtypes and columns are predicted subtypes." loading="lazy"><figcaption>Each cell shows the sample count and, when nonzero, the percentage of its true-subtype row.</figcaption></figure><figure class="matrix-card"><h3>EPIC validation</h3><p class="matrix-meta">n = 97 · Macro F1 91.9%</p><img src="figures/confusion-epic_validation-2.png" alt="Confusion matrix for NMF + SVM on EPIC validation. Rows are true subtypes and columns are predicted subtypes." loading="lazy"><figcaption>Each cell shows the sample count and, when nonzero, the percentage of its true-subtype row.</figcaption></figure></div>
+<div class="details-group"><details><summary>Held-out test set · subtype metrics</summary><div class="table-scroll"><table><caption class="sr-only">Precision, recall, F1 and support by subtype</caption><thead><tr><th scope="col">Subtype</th><th scope="col" class="numeric">Precision</th><th scope="col" class="numeric">Recall</th><th scope="col" class="numeric">F1</th><th scope="col" class="numeric">Support</th></tr></thead><tbody><tr><th scope="row">Subtype 1</th><td class="numeric">100.0%</td><td class="numeric">87.5%</td><td class="numeric">93.3%</td><td class="numeric">8</td></tr><tr><th scope="row">Subtype 2</th><td class="numeric">97.1%</td><td class="numeric">100.0%</td><td class="numeric">98.5%</td><td class="numeric">33</td></tr><tr><th scope="row">Subtype 3</th><td class="numeric">95.8%</td><td class="numeric">100.0%</td><td class="numeric">97.9%</td><td class="numeric">23</td></tr><tr><th scope="row">Subtype 4</th><td class="numeric">92.3%</td><td class="numeric">92.3%</td><td class="numeric">92.3%</td><td class="numeric">26</td></tr><tr><th scope="row">Subtype 5</th><td class="numeric">95.2%</td><td class="numeric">100.0%</td><td class="numeric">97.6%</td><td class="numeric">20</td></tr><tr><th scope="row">Subtype 6</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">23</td></tr><tr><th scope="row">Subtype 7</th><td class="numeric">100.0%</td><td class="numeric">96.5%</td><td class="numeric">98.2%</td><td class="numeric">57</td></tr><tr><th scope="row">Subtype 8</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">65</td></tr></tbody></table></div></details><details><summary>HM450-compatible validation · subtype metrics</summary><div class="table-scroll"><table><caption class="sr-only">Precision, recall, F1 and support by subtype</caption><thead><tr><th scope="col">Subtype</th><th scope="col" class="numeric">Precision</th><th scope="col" class="numeric">Recall</th><th scope="col" class="numeric">F1</th><th scope="col" class="numeric">Support</th></tr></thead><tbody><tr><th scope="row">Subtype 1</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">10</td></tr><tr><th scope="row">Subtype 2</th><td class="numeric">100.0%</td><td class="numeric">92.9%</td><td class="numeric">96.3%</td><td class="numeric">14</td></tr><tr><th scope="row">Subtype 3</th><td class="numeric">100.0%</td><td class="numeric">87.5%</td><td class="numeric">93.3%</td><td class="numeric">8</td></tr><tr><th scope="row">Subtype 4</th><td class="numeric">81.8%</td><td class="numeric">100.0%</td><td class="numeric">90.0%</td><td class="numeric">9</td></tr><tr><th scope="row">Subtype 5</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">7</td></tr><tr><th scope="row">Subtype 6</th><td class="numeric">50.0%</td><td class="numeric">100.0%</td><td class="numeric">66.7%</td><td class="numeric">4</td></tr><tr><th scope="row">Subtype 7</th><td class="numeric">100.0%</td><td class="numeric">90.9%</td><td class="numeric">95.2%</td><td class="numeric">22</td></tr><tr><th scope="row">Subtype 8</th><td class="numeric">100.0%</td><td class="numeric">92.0%</td><td class="numeric">95.8%</td><td class="numeric">25</td></tr></tbody></table></div></details><details><summary>EPIC validation · subtype metrics</summary><div class="table-scroll"><table><caption class="sr-only">Precision, recall, F1 and support by subtype</caption><thead><tr><th scope="col">Subtype</th><th scope="col" class="numeric">Precision</th><th scope="col" class="numeric">Recall</th><th scope="col" class="numeric">F1</th><th scope="col" class="numeric">Support</th></tr></thead><tbody><tr><th scope="row">Subtype 1</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">10</td></tr><tr><th scope="row">Subtype 2</th><td class="numeric">100.0%</td><td class="numeric">92.9%</td><td class="numeric">96.3%</td><td class="numeric">14</td></tr><tr><th scope="row">Subtype 3</th><td class="numeric">100.0%</td><td class="numeric">85.7%</td><td class="numeric">92.3%</td><td class="numeric">7</td></tr><tr><th scope="row">Subtype 4</th><td class="numeric">80.0%</td><td class="numeric">100.0%</td><td class="numeric">88.9%</td><td class="numeric">8</td></tr><tr><th scope="row">Subtype 5</th><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">100.0%</td><td class="numeric">7</td></tr><tr><th scope="row">Subtype 6</th><td class="numeric">50.0%</td><td class="numeric">100.0%</td><td class="numeric">66.7%</td><td class="numeric">4</td></tr><tr><th scope="row">Subtype 7</th><td class="numeric">100.0%</td><td class="numeric">90.9%</td><td class="numeric">95.2%</td><td class="numeric">22</td></tr><tr><th scope="row">Subtype 8</th><td class="numeric">100.0%</td><td class="numeric">92.0%</td><td class="numeric">95.8%</td><td class="numeric">25</td></tr></tbody></table></div></details></div>
+</section>
+<section id="data" class="panel" aria-labelledby="data-title">
+<div class="section-head"><div><p class="section-number">03 / Data context</p><h2 id="data-title">The sample structure behind the scores</h2>
+<p class="subtext">Subtype labels describe molecular subtypes within Group 3/4 medulloblastoma. Counts and validation relationships matter when interpreting performance.</p></div></div>
+<div class="data-grid"><figure><img src="figures/training-distribution.png" alt="Training sample counts for each subtype." loading="lazy"><figcaption>Training class balance provides context for the macro F1 and balanced accuracy metrics.</figcaption></figure><div><div class="table-scroll"><table><caption class="sr-only">Sample counts by split and subtype</caption><thead><tr><th scope="col">Split and subtype counts</th><th scope="col" class="numeric">Samples</th></tr></thead><tbody><tr><th scope="row">Training set<span class="class-counts">Subtype 1: 33 · Subtype 2: 130 · Subtype 3: 93 · Subtype 4: 105 · Subtype 5: 81 · Subtype 6: 93 · Subtype 7: 224 · Subtype 8: 257</span></th><td class="numeric">1,016</td></tr><tr><th scope="row">Held-out test set<span class="class-counts">Subtype 1: 8 · Subtype 2: 33 · Subtype 3: 23 · Subtype 4: 26 · Subtype 5: 20 · Subtype 6: 23 · Subtype 7: 57 · Subtype 8: 65</span></th><td class="numeric">255</td></tr><tr><th scope="row">HM450-compatible validation<span class="class-counts">Subtype 1: 10 · Subtype 2: 14 · Subtype 3: 8 · Subtype 4: 9 · Subtype 5: 7 · Subtype 6: 4 · Subtype 7: 22 · Subtype 8: 25</span></th><td class="numeric">99</td></tr><tr><th scope="row">EPIC validation<span class="class-counts">Subtype 1: 10 · Subtype 2: 14 · Subtype 3: 7 · Subtype 4: 8 · Subtype 5: 7 · Subtype 6: 4 · Subtype 7: 22 · Subtype 8: 25</span></th><td class="numeric">97</td></tr></tbody></table></div></div></div>
+<div class="pair-note"><h3>Paired validation representations</h3><p>The two validation representations contain 97 matched tumors. The selected model gives the same prediction for <strong>100.0%</strong> of matched pairs. Agreement measures prediction consistency; it does not establish correctness.</p><p>HM450-compatible and EPIC validation scores must not be combined as independent evidence: they represent the same tumors in prepared platform representations.</p></div>
+<ul class="notes"><li>Prepared cohort benchmark; the upstream 22,892-probe curation is inherited.</li><li>Only specimen IDs are reused from the legacy training panel; its probes are discarded.</li><li>Validation sets are paired representations of overlapping tumors, not independent cohorts.</li><li>All 99 labeled EPIC metadata IDs are reserved, including two without EPIC measurements.</li><li>These historical assessment splits support retrospective evaluation, not a new untouched test.</li></ul>
+</section>
+<section id="method" class="panel" aria-labelledby="method-title">
+<p class="section-number">04 / Reproducibility &amp; interpretation</p><h2 id="method-title">A transparent experimental workflow</h2>
+<p class="subtext">The report records aggregate results from a seeded run. It is generated directly from <a href="metrics.json">metrics.json</a> and uses local figures, so it can be read offline.</p>
+<div class="method-grid">
+<div class="method-step"><span class="step">STEP 01</span><h3>Inspect prepared inputs</h3><p>Check the feature matrix, subtype labels, sample counts, and split relationships before fitting classifiers.</p></div>
+<div class="method-step"><span class="step">STEP 02</span><h3>Tune on training data</h3><p>Compare the baseline and SVM pipelines using cross-validation. Select the model by macro F1, with transformations fitted within the modeling pipeline.</p></div>
+<div class="method-step"><span class="step">STEP 03</span><h3>Evaluate and document</h3><p>Report held-out and validation metrics, subtype errors, accuracy uncertainty, and paired-representation agreement where available.</p></div>
+</div>
+<details style="margin-top:28px"><summary>Selected model parameters</summary><pre><code>{
+  &quot;classifier__C&quot;: 0.1,
+  &quot;classifier__kernel&quot;: &quot;linear&quot;,
+  &quot;nmf__n_components&quot;: 15
+}</code></pre></details>
+
+<p class="footnote"><strong>Research use only.</strong> This project is an educational research benchmark. It is not a validated diagnostic tool, and its predictions must not guide clinical decisions. Independent validation with a fully specified preprocessing workflow would be required for stronger generalization claims.</p>
+</section>
+<footer class="report-footer"><p>Medulloblastoma methylation classifier · Prepared cohort benchmark · Full profile · Seed 42</p><p><a href="metrics.json">Inspect the aggregate run record →</a></p></footer>
+</main>
+</body>
+</html>

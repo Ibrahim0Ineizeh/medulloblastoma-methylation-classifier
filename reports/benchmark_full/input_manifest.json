@@ -1,0 +1,18 @@
+{
+  "hm450_final.parquet": {
+    "bytes": 181599815,
+    "sha256": "edd7994c5b29bd5c9e0af0ce602cdad49968023af7094355545f417b46d60b50"
+  },
+  "epic_final.parquet": {
+    "bytes": 29643899,
+    "sha256": "96c49b8b941c1eae1f818286c07c1e4b59499a44b71d327e9fdea6d430c0ca2d"
+  },
+  "gse130051_metadata.csv": {
+    "bytes": 143369,
+    "sha256": "37c54663df7493ad2b31c443fecb4892d39102f30ca27876be5a802663e8aebb"
+  },
+  "Train_Set1_MB_CommonProbes.csv": {
+    "bytes": 254611022,
+    "sha256": "0eb877f2b72baac0f5e82fc811613f34e47a8267110855828c654705c92a83be"
+  }
+}

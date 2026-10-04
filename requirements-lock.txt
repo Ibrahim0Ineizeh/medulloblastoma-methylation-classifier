@@ -1,0 +1,10 @@
+# Numerical environment used for the recorded benchmarks (Python 3.13.7).
+# Install with: python -m pip install -r requirements-lock.txt
+numpy==2.3.3
+pandas==2.3.2
+scipy==1.16.1
+scikit-learn==1.7.2
+matplotlib==3.10.6
+pyarrow==25.0.1
+joblib==1.5.2
+threadpoolctl==3.6.0

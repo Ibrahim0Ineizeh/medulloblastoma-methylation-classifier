@@ -1,0 +1,41 @@
+# Original coursework remains local, including feedback and reference solutions.
+/Assessment 1/
+/Assessment 2/
+.DS_Store
+.idea/
+.ipynb_checkpoints/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.cache/
+build/
+dist/
+data/raw/*
+!data/raw/.gitkeep
+*.joblib
+reports/*/cache/
+reports/*/predictions/
+reports/*/split_manifest.csv
+reports/*/selected_probes.csv
+reports/*/cv_results.csv
+reports/*/run.log
+tmp/
+.env
+.env.*
+.coverage
+htmlcov/
+/reports/notebook_*/
+
+# Retired presentation artifacts are retained locally.
+/CITATION.cff
+/CONTRIBUTING.md
+/docs/PORTFOLIO.md
+/docs/RESULTS.md
+/docs/assets/
+/reports/demo/
+/reports/benchmark/
+/reports/data_audit.json
+/data/examples/
